@@ -59,6 +59,20 @@ class TravelApp(ctk.CTk):
         city = self.city_input.get()
         print(f"Analyzing {city}...")  # Placeholder for actual functionality
 
+    # Update the GUI with API data (placeholder function)
+    def update_dashboard(self, data):
+        # Update the score label and data cards with real API data
+        self.score_label.configure(text=f"Travel Readiness Score: {data['score']}")
+        
+
+        # Logic for "Intelligence Score" vizualization
+        if data['score'] > 75:
+            self.score_label.configure(fg_color="green")
+        elif data['score'] > 50:
+            self.score_label.configure(fg_color="orange")
+        else:
+            self.score_label.configure(fg_color="red")
+
 if __name__ == "__main__":
     app = TravelApp()
     app.mainloop()
