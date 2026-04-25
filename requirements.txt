@@ -1,1 +1,4 @@
-requests, customtkinter, pandas, matplotlib
+requests
+customtkinter
+pandas
+matplotlib
