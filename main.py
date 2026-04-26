@@ -111,7 +111,8 @@ class TravelApp(ctk.CTk):
         # Update API Data Cards
         for key, value in data.items():
             if key in self.data_labels:
-                self.data_labels[key].configure(text=value)
+                display_text =  value if value else "No data available"
+                self.data_labels[key].configure(text=display_text)
 
     # Data Analysis Report Tab 
 
