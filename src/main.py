@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import matplotlib.pyplot as plt
 from PIL import Image
 
 #Set the appearance and color theme
@@ -90,8 +91,6 @@ class TravelApp(ctk.CTk):
         self.progress_bar.start()  # Start the indeterminate animation
         self.search_button.configure(state="disabled", text="Analyzing...")  # Disable the search button
 
-        self.after(2000, self.execute_analysis)  # Simulate API response after 2 seconds
-
     # Update the GUI with API data (placeholder function)
     def update_dashboard(self, data):
         # Update the score label and data cards with real API data
@@ -124,8 +123,29 @@ class TravelApp(ctk.CTk):
 
     # Data Analysis Report Tab 
 
+    # Generate chart based on analysis
+    def generate_city_chart(data, city_name):
+        # Define the data for the chart based on the analysis results
+        categories = ['Weather', 'Safety', 'News', 'Exchange Rate']
+        values = [data['weather_weight'], data['safety_weight'], data['news_weight'], data['exchange_weight']]
+        
+        # Create the plot
+        plt.figure(figsize=(6, 4))
+        plt.bar(categories, values, color=['blue', 'orange', 'green', 'red'])
+
+        # Make it for the city
+        plt.title(f"Risk Factory Contribution for {city_name}")
+        plt.ylabel("Risk Weight (%)")
+
+        # Image to be displayed in the analysis tab
+        plt.savefig("analysis_chart.png")
+        plt.close()  # Close the plot to free up memory
+
     # Chart display function (placeholder)
     def display_analysis_chart(self, chart_path):
+        # Clear previous charts in the tab
+        for child in self.tab_analysis.winfo_children(): child.destroy()
+
         my_image = ctk.CTkImage(light_image=Image.open(chart_path), dark_image=Image.open(chart_path), size=(600, 400))
         chart_label = ctk.CTkLabel(self.tab_analysis, image=my_image, text="")
         chart_label.pack(pady=20)
