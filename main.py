@@ -58,6 +58,10 @@ class TravelApp(ctk.CTk):
         self.create_data_card("Recent News Headlines", 2, 0)
         self.create_data_card("Exchange Rate (USD)", 2, 1)
 
+        # Status Bar 
+        self.status_label = ctk.CTkLabel(self, text="Ready", font=ctk.CTkFont(size=12))
+        self.status_label.grid(row=1, column=0, columnspan=2, padx=20, pady=5, sticky="w")
+
     def create_data_card(self, title, row, col):
         card = ctk.CTkFrame(self.tab_live)
         card.grid(row=row, column=col, sticky="nsew", padx=10, pady=10)
@@ -74,8 +78,9 @@ class TravelApp(ctk.CTk):
         city = self.city_input.get().strip()
 
         if not city:
-            self.score_label.configure(text="Please enter a city name.", text_color="red")
+            self.status_label.configure(text="Status: Error - No city entered", text_color="red")
             return
+        self.status_label.configure(text=f"Status: Analyzing {city}...", text_color="white")
         
         #Visual feedback: show progress bar and disable button
         self.progress_bar.grid()  # Show the progress bar
