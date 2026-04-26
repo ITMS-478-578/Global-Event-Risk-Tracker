@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from PIL import Image
 
 #Set the appearance and color theme
 ctk.set_appearance_mode("dark")
@@ -62,6 +63,8 @@ class TravelApp(ctk.CTk):
         self.status_label = ctk.CTkLabel(self, text="Ready", font=ctk.CTkFont(size=12))
         self.status_label.grid(row=1, column=0, columnspan=2, padx=20, pady=5, sticky="w")
 
+    # Live Tracker Tab
+
     def create_data_card(self, title, row, col):
         card = ctk.CTkFrame(self.tab_live)
         card.grid(row=row, column=col, sticky="nsew", padx=10, pady=10)
@@ -109,6 +112,19 @@ class TravelApp(ctk.CTk):
         for key, value in data.items():
             if key in self.data_labels:
                 self.data_labels[key].configure(text=value)
+
+    # Data Analysis Report Tab 
+
+    # Chart display function (placeholder)
+    def display_analysis_chart(self, chart_path):
+        my_image = ctk.CTkImage(light_image=Image.open(chart_path), dark_image=Image.open(chart_path), size=(600, 400))
+        chart_label = ctk.CTkLabel(self.tab_analysis, image=my_image, text="")
+        chart_label.pack(pady=20)
+
+        # Text summary area below the chart
+        summary = ctk.CTkTextbox(self.tab_analysis, width=600, height=100)
+        summary.pack(pady=10)
+        summary.insert("0,0", "Summary of findings: [Analysis goes here]")
 
 if __name__ == "__main__":
     app = TravelApp()
