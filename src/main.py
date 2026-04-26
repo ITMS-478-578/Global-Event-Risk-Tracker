@@ -33,7 +33,7 @@ class TravelApp(ctk.CTk):
         self.search_button.grid(row=2, column=0, padx=20, pady=10)
 
         # Loading Progress Bar
-        self.progress_bar = ctk.CTkProgressBar(self.sidebar_frame)
+        self.progress_bar = ctk.CTkProgressBar(self.sidebar_frame, width=150, height=10)
         self.progress_bar.grid(row=3, column=0, padx=20, pady=10)
         self.progress_bar.set(0)  # Start with an empty progress bar
         self.progress_bar.grid_remove()  # Hide it until needed
@@ -90,6 +90,8 @@ class TravelApp(ctk.CTk):
         self.progress_bar.start()  # Start the indeterminate animation
         self.search_button.configure(state="disabled", text="Analyzing...")  # Disable the search button
 
+        self.after(2000, self.execute_analysis)  # Simulate API response after 2 seconds
+
     # Update the GUI with API data (placeholder function)
     def update_dashboard(self, data):
         # Update the score label and data cards with real API data
@@ -97,16 +99,22 @@ class TravelApp(ctk.CTk):
         self.progress_bar.grid_remove()  # Hide the progress bar
         self.search_button.configure(state="normal", text="Analyze Risk")  # Re-enable the search button
 
+        # Reset Status Bar
+        self.status_label.configure(text="Status: Analysis Complete", text_color="green")
+
         # Update Score
         self.score_label.configure(text=f"Travel Readiness Score: {data['score']}")
         
         # Color logic for score card background based on score value
         if data['score'] > 75:
-            self.score_label.configure(fg_color="green")
+            color = "green"
         elif data['score'] > 50:
-            self.score_label.configure(fg_color="orange")
+            color = "orange"
         else:
-            self.score_label.configure(fg_color="red")
+            color = "red"
+
+        self.score_card.configure(fg_color=color)  # Match the card color to the label color
+        self.score_label.configure(fg_color=color)  # Match the label color to the card color
 
         # Update API Data Cards
         for key, value in data.items():
@@ -125,8 +133,8 @@ class TravelApp(ctk.CTk):
         # Text summary area below the chart
         summary = ctk.CTkTextbox(self.tab_analysis, width=600, height=100)
         summary.pack(pady=10)
-        summary.insert("0,0", "Summary of findings: [Analysis goes here]")
-
+        summary.insert("1.0", "Summary of findings: [Analysis goes here]")
+       
 if __name__ == "__main__":
     app = TravelApp()
     app.mainloop()
