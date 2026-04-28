@@ -1,1 +1,1 @@
-city,score,verdict,timestamp
+city,final_score,weather_weight,safety_weight,news_weight,exchange_weight,timestamp
