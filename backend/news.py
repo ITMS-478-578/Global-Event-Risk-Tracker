@@ -1,16 +1,68 @@
+import os
 import requests
 
+NEWS_API_URL = "https://newsapi.org/v2/everything"
 
-def get_news_headlines(city: str, api_key: str, max_results: int = 5) -> list[dict]:
+NEGATIVE_WORDS = {"protest", "attack", "war", "conflict", "crisis", "riot", "shooting", "bomb", "terror", "disaster"}
+POSITIVE_WORDS = {"festival", "growth", "peace", "celebration", "tourism", "development", "award", "record", "boom"}
+
+
+def _score_sentiment(headlines: list[str]) -> int:
     """
-    Fetch recent news headlines related to a city using the NewsAPI.
+    Assign a sentiment score by scanning headlines for keyword signals.
 
-    Each item in the returned list contains:
-        - title (str): headline text
-        - source (str): name of the news outlet
-        - url (str): link to the full article
-        - published_at (str): ISO 8601 timestamp
-
-    Returns an empty list if the request fails or no articles are found.
+    Each negative keyword hit subtracts 1; each positive hit adds 1.
+    The score is clamped to [-5, 5] so a single headline spike can't
+    dominate the final Travel Readiness Score.
     """
-    pass
+    score = 0
+    for headline in headlines:
+        words = set(headline.lower().split())
+        score -= len(words & NEGATIVE_WORDS)
+        score += len(words & POSITIVE_WORDS)
+    return max(-5, min(5, score))
+
+
+def get_news(city: str) -> dict | None:
+    """
+    Fetch the top 5 news headlines for a city using the NewsAPI.
+
+    Requires the environment variable NEWS_API_KEY to be set.
+
+    Returns:
+        {
+            "headlines":       list[str] — up to 5 headline strings,
+            "sentiment_score": int       — clamped to [-5, 5],
+                                           negative = bad news, positive = good news,
+        }
+        or None if the API key is missing or the request fails.
+    """
+    api_key = os.getenv("NEWS_API_KEY")
+    if not api_key:
+        print("Error: NEWS_API_KEY environment variable not set.")
+        return None
+
+    try:
+        response = requests.get(
+            NEWS_API_URL,
+            params={
+                "q": city,
+                "pageSize": 5,
+                "sortBy": "publishedAt",
+                "language": "en",
+                "apiKey": api_key,
+            },
+            timeout=10,
+        )
+        response.raise_for_status()
+        articles = response.json().get("articles", [])
+
+        headlines = [article["title"] for article in articles if article.get("title")]
+
+        return {
+            "headlines": headlines,
+            "sentiment_score": _score_sentiment(headlines),
+        }
+
+    except (requests.RequestException, KeyError):
+        return None

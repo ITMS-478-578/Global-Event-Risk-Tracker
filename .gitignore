@@ -1,0 +1,22 @@
+# Environment & secrets
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Generated files
+analysis_chart.png
+data/city_scores.csv
+
+# IDE
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
