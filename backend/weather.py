@@ -60,22 +60,20 @@ def _geocode(city: str) -> tuple[float, float] | None:
         return None
 
 
-def get_weather(city: str) -> dict | None:
+def get_weather(city: str, coords: tuple[float, float] | None = None) -> dict | None:
     """
     Fetch current weather for a city using Open-Meteo (no API key required).
-    Steps:
-        1. Geocode the city name to lat/lon via Nominatim.
-        2. Request current temperature and weather code from Open-Meteo.
-        3. Translate the WMO weather code to a readable description.
 
+    Args:
+        city:   City name (used for geocoding if coords are not provided).
+        coords: Optional pre-computed (lat, lon) — skips the Nominatim call
+                when the caller has already geocoded the city.
     Returns:
-        {
-            "temperature":           float  — current temp in °C,
-            "weather_description":   str    — e.g. "Partly cloudy",
-        }
+        {"temperature": float, "weather_description": str}
         or None if geocoding or the weather request fails.
     """
-    coords = _geocode(city)
+    if coords is None:
+        coords = _geocode(city)
     if coords is None:
         return None
 

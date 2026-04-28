@@ -3,3 +3,5 @@ customtkinter
 pandas
 matplotlib
 python-dotenv
+nltk
+anthropic

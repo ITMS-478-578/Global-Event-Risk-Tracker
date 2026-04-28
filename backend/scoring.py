@@ -51,10 +51,10 @@ def _weather_score(weather: dict | None) -> int:
 
 def _news_score(news: dict | None) -> int:
     """
-    Normalize the news sentiment from [-5, 5] to [0, 100].
-    Formula: (sentiment + 5) × 10
+    Normalize the VADER sentiment score from [-5, 5] to [0, 100].
+    Returns NEUTRAL when news is None or no headlines were found.
     """
-    if not news:
+    if not news or not news.get("headlines"):
         return NEUTRAL
     raw = news.get("sentiment_score", 0)
     return max(0, min(100, (raw + 5) * 10))
@@ -106,5 +106,11 @@ def calculate_travel_score(
             "safety_weight":   safety_weight,
             "news_weight":     news_weight,
             "exchange_weight": exchange_weight,
+        },
+        "raw_scores": {
+            "weather":  weather_s,
+            "safety":   safety_s,
+            "news":     news_s,
+            "currency": currency_s,
         },
     }

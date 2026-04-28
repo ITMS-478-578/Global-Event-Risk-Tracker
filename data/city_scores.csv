@@ -1,1 +1,7 @@
 city,final_score,weather_weight,safety_weight,news_weight,exchange_weight,timestamp
+London,66,17,21,12,16,2026-04-27 21:24
+Mandalay,59,20,21,12,6,2026-04-27 21:26
+Colima,64,25,15,12,12,2026-04-27 21:35
+Bangkok,56,18,15,12,11,2026-04-27 21:42
+Chicago,63,17,20,10,16,2026-04-27 21:54
+Pietermaritzburg,53,17,14,10,12,2026-04-27 21:55
