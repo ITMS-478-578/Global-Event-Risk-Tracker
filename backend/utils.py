@@ -215,7 +215,7 @@ def analyze_city(city: str) -> dict:
 
         # Card strings (keys must match create_data_card() titles exactly)
         "Weather Forecast":          _fmt_weather(weather),
-        "Local Safety (Hospitals)":  _fmt_safety(safety),
+        "Local Safety":  _fmt_safety(safety),
         "Recent News Headlines":     _fmt_news(news),
         "Exchange Rate (USD)":       _fmt_currency(currency, currency_code),
 

@@ -70,7 +70,7 @@ class TravelApp(ctk.CTk):
 
         # API Data Cards (Placeholders)
         self.create_data_card("Weather Forecast", 1, 0)
-        self.create_data_card("Local Safety (Hospitals)", 1, 1)
+        self.create_data_card("Local Safety", 1, 1)
         self.create_data_card("Recent News Headlines", 2, 0)
         self.create_data_card("Exchange Rate (USD)", 2, 1)
 
@@ -243,13 +243,21 @@ class TravelApp(ctk.CTk):
         plt.close()
 
     def _generate_history_chart(self) -> bool:
-        """Generate and save a horizontal bar chart of all analyzed cities.
+        """Generate and save a horizontal bar chart of 5 most recent cities analyzed.
         Returns True if a chart was saved, False if there is insufficient data."""
         try:
-            from backend.data_pipeline import load_history
-            df = load_history()
+            import backend.data_pipeline as data_pipeline
+            df = data_pipeline.load_history()
             if df.empty:
                 return False
+
+            # Keep only the latest 5 searches in the CSV history
+            if len(df) > 5:
+                df = df.tail(5).copy()
+                history_path = getattr(data_pipeline, "HISTORY_FILE",
+                                       getattr(data_pipeline, "HISTORY_PATH", None))
+                if history_path is not None:
+                    df.to_csv(history_path, index=False)
 
             DARK  = "#1e1e1e"
             WHITE = "white"
