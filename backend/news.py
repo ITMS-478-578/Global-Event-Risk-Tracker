@@ -11,11 +11,12 @@ _vader = SentimentIntensityAnalyzer()
 
 
 def _score_sentiment(headlines: list[str]) -> int:
-    """Average VADER compound scores and scale to [-5, 5]."""
+    """Average VADER compound scores and scale to [0, 10]."""
     if not headlines:
         return 0
     scores = [_vader.polarity_scores(h)["compound"] for h in headlines]
-    return round(sum(scores) / len(scores) * 5)
+    average = sum(scores) / len(scores)
+    return round((average + 1) * 5)
 
 
 def _fetch_headlines(query: str, api_key: str, sort: str = "relevancy") -> list[str]:
